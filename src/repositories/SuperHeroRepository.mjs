@@ -12,17 +12,20 @@ class SuperHeroRepository extends IRepository {
     }
 
     async obtenerTodos() {
-        return await SuperHero.find({})
+        return await SuperHero.find({ nombreSuperheroe: { $exists: true } });
     }
 
     async buscarPorAtributo(atributo, valor) {
         //const query = { [atributo]: new RegExp(valor, 'i') }
         if (!isNaN(valor)) {
-            const query = { [atributo]: valor }
+            const query = {
+                [atributo]: valor
+            }
             return await SuperHero.find(query)
-        }
-        else {
-            const query = { [atributo]: new RegExp(valor, 'i') }
+        } else {
+            const query = {
+                [atributo]: new RegExp(valor, 'i')
+            }
             return await SuperHero.find(query)
         }
     }
@@ -32,29 +35,29 @@ class SuperHeroRepository extends IRepository {
     }
 
 
-    async agregarHeroe(datos) {        
-        const nuevoHeroe= await SuperHero.create(datos)        
+    async agregarHeroe(datos) {
+        const nuevoHeroe = await SuperHero.create(datos)
         return nuevoHeroe
     }
 
-    async actualizarHeroe(id, datos) {  
-        
-        try {   
-            const heroe= await SuperHero.findByIdAndUpdate( id, { $set:datos }, { new : true , upsert: true})                        
+    async actualizarHeroe(id, datos) {
+
+        try {
+            const heroe = await SuperHero.findByIdAndUpdate(id, { $set: datos }, { new: true, upsert: true })
             return heroe
-            
+
         } catch (error) {
-            throw('se produjo un error al intentar actualizar: ',error)
-        }          
+            throw ('se produjo un error al intentar actualizar: ', error)
+        }
     }
 
-    async borrarHeroe(id) {        
-        const heroe= await SuperHero.findByIdAndDelete( id)        
+    async borrarHeroe(id) {
+        const heroe = await SuperHero.findByIdAndDelete(id)
         return heroe
     }
-    
-    async borrarPorNombre(name) {        
-        const heroe= await SuperHero.deleteOne( { nombreSuperheroe : name })   
+
+    async borrarPorNombre(name) {
+        const heroe = await SuperHero.deleteOne({ nombreSuperheroe: name })
         return heroe
     }
 
